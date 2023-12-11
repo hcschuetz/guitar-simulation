@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keyboard</title>
+  <style>
+    #keyboard {
+      width: 97vw;
+      height: 28vw;
+      position: fixed;
+      margin: 0;
+    }
+    .key {
+      border: 2px solid #444;
+      border-radius: 5px;
+      font-size: 2.5vw;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+    }
+    .key.key__pressed {
+      background-color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div  id="keyboard" tabindex="0"></div>
+</body>
+<script>
+  const stringPitches = [64, 59, 55, 50];
+
+  const noteNames = "c c♯ d d♯ e f f♯ g g♯ a b♭ b".split(" ");
+  const pitch2note = pitch =>
+    `${noteNames[pitch % 12]}<sub>${Math.floor(pitch / 12) - 1}</sub>`;
+
+  const keyMap = {};
+  const rowLengths = [];
+  `
+    Backquote, Digit1, Digit2, Digit3, Digit4, Digit5, Digit6, Digit7, Digit8, Digit9, Digit0, Minus, Equal, Backspace
+    Tab, KeyQ, KeyW, KeyE, KeyR, KeyT, KeyY, KeyU, KeyI, KeyO, KeyP, BracketLeft, BracketRight, Backslash
+    CapsLock, KeyA, KeyS, KeyD, KeyF, KeyG, KeyH, KeyJ, KeyK, KeyL, Semicolon, Quote, Enter
+    ShiftLeft, KeyZ, KeyX, KeyC, KeyV, KeyB, KeyN, KeyM, Comma, Period, Slash, ShiftRight
+  `.trim().split(/\n\r?|\r/).forEach((line, row) => {
+    const fields = line.split(",");
+    rowLengths[row] = fields.length;
+    fields.forEach((field, col) => {
+      keyMap[field.trim()] = {row, col};
+    })
+  });
+
+  // ---------------------------------------------------------------------------
+
+  const rowOffsets = [0, 1/2, 3/4, 5/4];
+
+  const keyboard = document.querySelector("#keyboard");
+
+  const size = 5.5;
+  const dist = 1;
+  const step = size + dist;
+
+  const topOffset = 1;
+  const left = 1;
+  const right = 95;
+
+
+  const windowWidth = window.innerWidth/100;
+  const length = x => `${x*windowWidth}px`;
+
+  const keys = {};
+  for (const [name, {row, col}] of Object.entries(keyMap)) {
+    const key = document.createElement("div");
+    keys[name] = key;
+    key.className = "key";
+    key.style.position = "absolute";
+    key.style.top = length(topOffset + step * row);
+    key.style.height = length(size);
+    const offset = step * (rowOffsets[row] + col);
+    if (col === 0) {
+      key.style.left = length(left);
+      key.style.width = length(-left + size + offset);
+    } else if (col === rowLengths[row] - 1) {
+      key.style.left = length(offset);
+      key.style.width = length(right - offset);
+    } else {
+      key.style.left = length(offset);
+      key.style.width = length(size);
+    }
+    const span = document.createElement("span");
+    span.className = "key-label";
+    span.innerHTML = pitch2note(stringPitches[row] + col);
+    key.append(span);
+    keyboard.append(key);
+  }
+
+  const getClasses = el => (el.className ?? "").trim().split(/\s+/);
+  function setClasses(el, list) { el.className = list.join(" "); }
+  function addClass(el, name) {
+    const classes = getClasses(el);
+    if (!classes.includes(name)) {
+      setClasses(el, classes.concat([name]));
+    }
+  }
+  function removeClass(el, name) {
+    const classes = getClasses(el);
+    if (classes.includes(name)) {
+      setClasses(el, classes.filter(n => n !== name));
+    }
+  }
+
+  keyboard.addEventListener("keydown", event => {
+    const el = keys[event.code];
+    if (el) {
+      event.preventDefault();
+      addClass(el, "key__pressed");
+    }
+  });
+
+  keyboard.addEventListener("keyup", event => {
+    const el = keys[event.code];
+    if (el) {
+      event.preventDefault();
+      removeClass(el, "key__pressed");
+    }
+  });
+</script>
+</html>

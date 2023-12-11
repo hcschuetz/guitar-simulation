@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+
+<title>Guitar-Simulator Demo</title>
+
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 30px;
+  }
+  .string-box {
+    float: right;
+    width: 110px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+  }
+  .string {
+    border: 2px solid #444;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 5px 15px;
+    width: 80px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+  }
+  .note-text {
+    display: inline-block;
+    width: 40px;
+  }
+  .note-svg {
+    width: 60px;
+    height: 90px;
+  }
+</style>
+
+<body>
+  <div class="string-box">
+    <div class="string" id="e-string"></div>
+    <div class="string" id="b-string"></div>
+    <div class="string" id="g-string"></div>
+    <div class="string" id="d-string"></div>
+  </div>
+  <h1>Guitar-Simulator Demo</h1>
+  <p>
+    This demo simulates 4 strings of a guitar,
+    each mapped to one row of keys on your keyboard:
+    <ul>
+      <li>The e string on the number row (1, 2, 3, 4, ...)</li>
+      <li>The b string on the next row (Q, W, E, R, ...)</li>
+      <li>The g string on the next row (A, S, D, F, ...)</li>
+      <li>The d string on the next row (Z, X, C, V, ...)</li>
+    </ul>
+    Your keyboard layout may differ.
+    In any case, the effect of pressing a key should be determined by its
+    position, not the associated character.
+  </p>
+  <p>
+    The first key in each row plays the open string while the subsequent
+    keys correspond to the frets.
+    Note that key shapes and positions at the right ends of the rows
+    vary across keyboards.
+    So there the mapping from keys to notes might not fully fit.
+  </p>
+  <p>
+    A string is "picked" by pressing a key
+    and the corresponding note will play until
+    you release the key,
+    you press another key for the same string,
+    or the string's vibration has faded out after some time.
+    While you cannot play more than one note at a time on a single string,
+    it is possible to play multiple notes on different strings simultaneously
+    (as far as your keyboard properly reports multiple key presses/releases).
+  </p>
+  <p>
+    For each string the currently playing note is displayed
+    in one of the boxes to the right.
+  </p>
+  <p>
+    Some browsers such as Chrome do not allow web pages to emit sound
+    before you have interacted with the page
+    (and keyboard input does not count).
+    So click this button to enable audio output:
+    <button id="resumeAudio">Start Audio</button>
+  </p>
+
+  <h2>Implementation notes</h2>
+  <p>
+    The purpose of this demo was to experiment with sound generation
+    in an <code>AudioWorkletNode</code>.
+    (See <a href="index.js" target="_blank" rel="noopener noreferrer">here</a>
+    for the main JavaScript code and
+    <a href="StringWorklet.js" target="_blank" rel="noopener noreferrer">here</a>
+    for the worklet processor code.  Furthermore
+    <a href="note-display.js" target="_blank" rel="noopener noreferrer">here</a>
+    is the code for drawing the notes.)
+  </p>
+  <p>
+    There is one long-lived worklet node per string.  Picking and damping
+    works by sending messages.
+  </p>
+  <p>
+    The code simulates a string sound
+    by superimposing multiple harmonics, each of which is a decaying sine wave.
+    While the actual sound generation by the worklet processor
+    happens in the audio thread, 
+    the parameters are calculated in the main JS thread.
+  </p>
+  <p>
+    As with real guitar strings higher harmonics decay faster than lower ones.
+    So over time a picked string changes
+    from an overtone-rich sound towards a pure sine wave.
+    You can play with the sound generator code to create even more realistic
+    string sounds or sounds of completely different instruments.
+  </p>
+</body>
+
+<script type="module" src="index.js"></script>
