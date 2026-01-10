@@ -113,6 +113,28 @@
     You can play with the sound generator code to create even more realistic
     string sounds or sounds of completely different instruments.
   </p>
+
+  <h2>Harmonics tweaked to 12TET</h2>
+  <p>
+    An experiment inspired by
+    <a href="https://www.youtube.com/watch?v=wUwC4syOX1s">this video</a> by
+    <a href="https://newtonality.net/">New Tonality</a>:
+  </p>
+  <p>
+    To make intervals in 12-tone equal temperament (12TET) sound more harmonic,
+    we can tweak the overtones
+    so that their frequency ratios to the base frequency are powers of
+    <math>
+      <mroot>
+        <mi>2</mi>
+        <mn>12</mn>
+      </mroot>
+    </math>.
+  </p>
+  <label>
+    <input type="checkbox" id="use12tet">
+    Tweak overtones to 12TET 
+  </label>
 </body>
 
 <script type="module" src="index.js"></script>
