@@ -11,7 +11,7 @@ document.getElementById("resumeAudio").addEventListener("click", () => ctx.resum
 const almostDestination = new GainNode(ctx, {gain: 0.25});
 almostDestination.connect(ctx.destination);
 
-const harmonicFactors12TET = Array.from({length: 30}, (_, i) =>
+const partialFactors12TET = Array.from({length: 30}, (_, i) =>
   2**(Math.round(Math.log2(i+1) * 12) / 12)
 );
 
@@ -47,20 +47,20 @@ class StringNode extends AudioWorkletNode {
     }
     const fretFreq = this.baseFreq * 2**(fret/12);
     const {sampleRate} = this.context;
-    const nHarmonics = Math.min(15, Math.floor(sampleRate/2/fretFreq));
-    const stiffnesses = new Float32Array(nHarmonics);
-    const decayRates = new Float32Array(nHarmonics);
-    const vals = new Float32Array(nHarmonics);
-    for (let i = 0; i < nHarmonics; i++) {
-      const harmonicFactor =
-        temperedCheckbox.checked ? harmonicFactors12TET[i] : i+1;
-      const freq = fretFreq * harmonicFactor;
+    const nPartials = Math.min(15, Math.floor(sampleRate/2/fretFreq));
+    const stiffnesses = new Float32Array(nPartials);
+    const decayRates = new Float32Array(nPartials);
+    const vals = new Float32Array(nPartials);
+    for (let i = 0; i < nPartials; i++) {
+      const partialFactor =
+        temperedCheckbox.checked ? partialFactors12TET[i] : i+1;
+      const freq = fretFreq * partialFactor;
       // stiffnesses are computed according to the physical model
       stiffnesses[i] = 2 - 2*Math.cos(TAU * freq / sampleRate);
       // absFriction and relVal are manually "designed"
-      const absFriction = 4 * (fretFreq/1000)*harmonicFactor**1.5;
+      const absFriction = 4 * (fretFreq/1000)*partialFactor**1.5;
       decayRates[i] = Math.exp(-(absFriction / sampleRate));
-      const relVal = (2000/fretFreq)**1.5 * (harmonicFactor%2 ? 1 : 2) / harmonicFactor**2;
+      const relVal = (2000/fretFreq)**1.5 * (partialFactor%2 ? 1 : 2) / partialFactor**2;
       vals[i] = this.amplitude * relVal;
     }
     this.port.postMessage({type: "pick", stiffnesses, decayRates, vals});

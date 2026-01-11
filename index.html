@@ -101,27 +101,27 @@
   </p>
   <p>
     The code simulates a string sound
-    by superimposing multiple harmonics, each of which is a decaying sine wave.
+    by superimposing multiple partials, each of which is a decaying sine wave.
     While the actual sound generation by the worklet processor
     happens in the audio thread, 
     the parameters are calculated in the main JS thread.
   </p>
   <p>
-    As with real guitar strings higher harmonics decay faster than lower ones.
+    As with real guitar strings higher partials decay faster than lower ones.
     So over time a picked string changes
     from an overtone-rich sound towards a pure sine wave.
     You can play with the sound generator code to create even more realistic
     string sounds or sounds of completely different instruments.
   </p>
 
-  <h2>Harmonics tweaked to 12TET</h2>
+  <h2>Partials tweaked to 12TET</h2>
   <p>
     An experiment inspired by
     <a href="https://www.youtube.com/watch?v=wUwC4syOX1s">this video</a> by
     <a href="https://newtonality.net/">New Tonality</a>:
   </p>
   <p>
-    To make intervals in 12-tone equal temperament (12TET) sound more harmonic,
+    To make intervals in 12-tone equal temperament (12TET) sound more consonant,
     we can tweak the overtones
     so that their frequency ratios to the base frequency are powers of
     <math>

@@ -9,10 +9,10 @@
 // decayRates[i]  Factor by which the speed is reduced over one sampling step.
 //                Input.  Typically slightly smaller than 1.
 function oscillate(channel, {vals, speeds, stiffnesses, decayRates}) {
-  const nHarmonics = vals.length;
+  const nPartials = vals.length;
   const nSamples = channel.length;
   let energy = 0;
-  for (let j = 0; j < nHarmonics; j++) {
+  for (let j = 0; j < nPartials; j++) {
     const decayRate = decayRates[j];
     const stiffness = stiffnesses[j];
     let speed = speeds[j];
