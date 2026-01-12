@@ -32,6 +32,27 @@
     width: 60px;
     height: 90px;
   }
+  h1 {
+    margin-bottom: 0.7rem;
+  }
+  h2 {
+    margin-block: 1rem 0.5rem;
+  }
+  p {
+    margin-block: 0.5em;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  details {
+    margin-block: 1em;
+    border-radius: 1em;
+    padding: 0.5em 1em;
+    background-color: #eee;
+    summary {
+      font-weight: bold;
+    }
+  }
 </style>
 
 <body>
@@ -114,14 +135,9 @@
     string sounds or sounds of completely different instruments.
   </p>
 
-  <h2>Partials tweaked to 12TET</h2>
+  <h2>Tweaking overtones</h2>
   <p>
-    An experiment inspired by
-    <a href="https://www.youtube.com/watch?v=wUwC4syOX1s">this video</a> by
-    <a href="https://newtonality.net/">New Tonality</a>:
-  </p>
-  <p>
-    To make intervals in 12-tone equal temperament (12TET) sound more consonant,
+    To make intervals in 12-tone equal temperament (12-tet) sound more consonant,
     we can tweak the overtones
     so that their frequency ratios to the base frequency are powers of
     <math>
@@ -130,11 +146,37 @@
         <mn>12</mn>
       </mroot>
     </math>.
+  Of course this deviates from the behavior of a physical guitar.
   </p>
   <label>
     <input type="checkbox" id="use12tet">
-    Tweak overtones to 12TET 
+    Tweak overtones to 12-tet 
   </label>
+  <details>
+    <summary>Background</summary>
+    <p>
+      <a href="https://en.wikipedia.org/wiki/Stretched_tuning">Stretched
+        tuning</a> adapts scale intervals to the
+      non-integer frequency ratios of the overtones of low-pitch piano strings.
+      This brought me to the idea that in digital sound generation
+      we can also do the opposite,
+      namely adapt the overtones to the scale intervals.
+    </p>
+    <p>
+      Turns out that this idea is not at all new.
+      It is demonstrated for example in the video
+      <a href="https://www.youtube.com/watch?v=wUwC4syOX1s"><em>Benedetti's
+        Puzzle SOLVED</em></a> by NewTonality
+      and described in the paper
+      <a href="https://sethares.engr.wisc.edu/paperspdf/specspec97.pdf">
+        <em>Specifying spectra for musical scales</em></a>
+      by William A.&nbsp;Sethares and in section 12.3.2 of his book
+      <a href="https://sethares.engr.wisc.edu/ttss.html"><em>Tuning Timbre
+        Spectrum Scale</em></a>.
+      According to the latter,
+      Hammond organs actually use these tweaked overtones.
+    </p>
+  </details>
 </body>
 
 <script type="module" src="index.js"></script>
